@@ -3,7 +3,7 @@ Django==5.0.2
 django-debug-toolbar==4.3.0
 django-extensions==3.2.3
 djangorestframework==3.14.0
-Faker==23.2.1
+Faker==23.3.0
 gunicorn==21.2.0
 MarkupSafe==2.1.5
 packaging==23.2
