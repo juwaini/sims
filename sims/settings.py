@@ -135,3 +135,6 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
