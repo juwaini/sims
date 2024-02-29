@@ -1,0 +1,6 @@
+*.pyc
+venv
+.idea
+.dockerignore
+Dockerfile
+fly.toml

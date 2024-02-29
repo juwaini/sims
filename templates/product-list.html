@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+        <h1>Product List</h1>
+        <a href="{% url 'create-product' %}">
+        <button>Add Product</button>
+        </a>
+        <!--button id="addProductBtn">ADD PRODUCT</button-->
+        <table id="productTable" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Supplier Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td><a href="{% url 'detail-product' pk=product.pk %}">{{ product.name }}</a></td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.supplier.name }}</td>
+                    <td>
+                        <!-- Add any actions like edit or delete here -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Include DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            $('#productTable').DataTable();
+
+            // Add Product Button Click Event
+            $('#addProductBtn').click(function() {
+                // Redirect to add product page or trigger modal
+                // Replace the below line with your desired action
+                alert('Redirect or open modal to add product');
+            });
+        });
+    </script>
+{% endblock body %}
