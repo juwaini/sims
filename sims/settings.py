@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-g2ei_fhz)p9)7ya82ylchw2vd2+a$rv3-4rqie+a3)*xm5n+me
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sims.fly.dev']
+ALLOWED_HOSTS = ['sims.juwaini.com']
 
 # Application definition
 
