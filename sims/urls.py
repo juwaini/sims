@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from inventories.views import ProductAPIListView, ProductAPIDetailView, ProductListView, ProductCreateView, \
-    ProductDetailView
+from inventories.views import (ProductAPIListView, ProductAPIDetailView, ProductListView, ProductCreateView,
+                               ProductDetailView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("accounts/", include("django.contrib.auth.urls")),
 
     path('inventory/', ProductListView.as_view(), name='list-products'),
     path('inventory/<int:pk>/', ProductDetailView.as_view(), name='detail-product'),

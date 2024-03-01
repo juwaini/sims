@@ -1,6 +1,7 @@
 import random
 from decimal import Decimal
 
+from django.contrib.auth.models import User, Group, Permission
 from django.test import TestCase
 from django.urls import reverse
 from faker import Faker
@@ -15,6 +16,11 @@ fake = Faker()
 
 class ProductTestCase(TestCase):
     def setUp(self):
+        self.guest_group = Group.objects.create(name='Guest')
+        # permissions = Permission.objects.all()
+        self.guest_user = User.objects.create_user(username='guest', email=fake.email(), password=fake.password())
+        self.guest_user.groups.add(self.guest_group)
+
         s = Supplier.objects.create(
             name=fake.company(),
             contact_person=fake.name(),
@@ -31,6 +37,7 @@ class ProductTestCase(TestCase):
         )
 
     def test_api_list_inventory(self):
+        # self.client.force_login(self.guest_user, backend=None)
         url = reverse('api-list-products')
         products_total = Product.objects.all().count()
         response = self.client.get(url)
@@ -40,6 +47,7 @@ class ProductTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_api_create_inventory(self):
+        # self.client.force_login(self.guest_user, backend=None)
         s = Supplier.objects.create(
             name=fake.company(),
             contact_person=fake.name(),
@@ -58,6 +66,7 @@ class ProductTestCase(TestCase):
         }
 
         response = self.client.post(url, data=product, format='')
+        print(response.data)
         after = Product.objects.all().count()
 
         self.assertEqual(before + 1, after)
@@ -100,5 +109,5 @@ class ProductTestCase(TestCase):
 
         self.assertEqual(before, after)
         name_after = Product.objects.get(pk=1).name
-        self.assertNotEquals(name_before, name_after)
-        self.assertNotEquals('Product Juwaini', name_after)
+        self.assertNotEqual(name_before, name_after)
+        self.assertEqual('Product Juwaini', name_after)

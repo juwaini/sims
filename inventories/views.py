@@ -39,8 +39,8 @@ class ProductCreateView(CreateView):
 
 
 class ProductAPIListView(APIView):
-    # authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAdminUser]
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
         products = Product.objects.all()

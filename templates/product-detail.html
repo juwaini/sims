@@ -9,12 +9,26 @@
         <li><strong>Name:</strong> {{ object.name }}</li>
         <li><strong>Description:</strong> {{ object.description }}</li>
         <li><strong>Price:</strong> {{ object.price }}</li>
-        <li><strong>Supplier:</strong> {{ object.supplier.name }}</li>
-
+        <li><strong>Quantity:</strong> {{ object.quantity }}</li>
+        <hr>
+        <h4>SUPPLIER</h4>
+        <li><strong>Name:</strong> {{ object.supplier.name }}</li>
+        <li><strong>Contact Person:</strong> {{ object.supplier.contact_person }}</li>
+        <li><strong>Email:</strong> {{ object.supplier.email }}</li>
+        <li><strong>Phone Number:</strong> {{ object.supplier.phone_number }}</li>
+        <li><strong>Address:</strong> {{ object.supplier.address }}</li>
     </ul>
-    <a href="{#% url 'product_update' pk=object.pk %#}">Update</a>
-    <form action="{#% url 'product_delete' pk=object.pk %#}" method="post">
-        {% csrf_token %}
-        <button type="submit">Delete</button>
-    </form>
+    {% if perms.inventories.update_product %}
+        <a href="{% url 'detail-product' pk=object.pk %}">
+            <button>Update</button>
+        </a>
+    {% endif %}
+
+    {% if perms.inventories.delete_product %}
+        <form action="{% url 'detail-product' pk=object.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    {% endif %}
+    
 {% endblock body %}

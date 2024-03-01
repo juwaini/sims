@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+from django.urls import reverse
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +26,7 @@ SECRET_KEY = 'django-insecure-g2ei_fhz)p9)7ya82ylchw2vd2+a$rv3-4rqie+a3)*xm5n+me
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sims.juwaini.com']
+ALLOWED_HOSTS = ['sims.juwaini.com', 'localhost']
 
 # Application definition
 
@@ -139,3 +141,5 @@ INTERNAL_IPS = [
 # import os
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_ROOT = '/var/www/html/static/'
+
+LOGIN_REDIRECT_URL = '/inventory'
