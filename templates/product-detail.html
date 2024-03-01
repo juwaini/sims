@@ -19,16 +19,15 @@
         <li><strong>Address:</strong> {{ object.supplier.address }}</li>
     </ul>
     {% if perms.inventories.update_product %}
-        <a href="{% url 'detail-product' pk=object.pk %}">
+        <a href="{% url 'update-product' pk=object.pk %}">
             <button>Update</button>
         </a>
     {% endif %}
 
     {% if perms.inventories.delete_product %}
-        <form action="{% url 'detail-product' pk=object.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Delete</button>
-        </form>
+        <a href="{% url 'delete-product' pk=object.pk %}">
+            <button>Delete</button>
+        </a>
     {% endif %}
-    
+
 {% endblock body %}

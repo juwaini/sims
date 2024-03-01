@@ -18,15 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 
 from inventories.views import (ProductAPIListView, ProductAPIDetailView, ProductListView, ProductCreateView,
-                               ProductDetailView)
+                               ProductDetailView, ProductUpdateView, ProductDeleteView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
 
     path('inventory/', ProductListView.as_view(), name='list-products'),
-    path('inventory/<int:pk>/', ProductDetailView.as_view(), name='detail-product'),
     path('create-inventory/', ProductCreateView.as_view(), name='create-product'),
+    path('inventory/<int:pk>/', ProductDetailView.as_view(), name='detail-product'),
+    path('update-inventory/<int:pk>', ProductUpdateView.as_view(), name='update-product'),
+    path('delete-inventory/<int:pk>', ProductDeleteView.as_view(), name='delete-product'),
 
     path('api/inventory', ProductAPIListView.as_view(), name='api-list-products'),
     path('api/add-inventory/', ProductAPIListView.as_view(), name='api-create-product'),

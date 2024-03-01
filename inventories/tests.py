@@ -16,7 +16,10 @@ fake = Faker()
 
 class ProductTestCase(TestCase):
     def setUp(self):
+        self.nothing_user = User.objects.create_user(username='nothing', email=fake.email(), password=fake.password())
+
         self.guest_group = Group.objects.create(name='Guest')
+        # self.guest_group.permissions.add()
         # permissions = Permission.objects.all()
         self.guest_user = User.objects.create_user(username='guest', email=fake.email(), password=fake.password())
         self.guest_user.groups.add(self.guest_group)
@@ -37,7 +40,7 @@ class ProductTestCase(TestCase):
         )
 
     def test_api_list_inventory(self):
-        # self.client.force_login(self.guest_user, backend=None)
+        self.client.force_login(self.nothing_user, backend=None)
         url = reverse('api-list-products')
         products_total = Product.objects.all().count()
         response = self.client.get(url)
@@ -47,7 +50,7 @@ class ProductTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_api_create_inventory(self):
-        # self.client.force_login(self.guest_user, backend=None)
+        self.client.force_login(self.nothing_user, backend=None)
         s = Supplier.objects.create(
             name=fake.company(),
             contact_person=fake.name(),
@@ -73,12 +76,14 @@ class ProductTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_api_details_inventory(self):
+        self.client.force_login(self.nothing_user, backend=None)
         url = reverse('api-detail-product', kwargs={'pk': 1})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_api_delete_inventory(self):
+        self.client.force_login(self.nothing_user, backend=None)
         before = Product.objects.all().count()
 
         url = reverse('api-delete-product', kwargs={'pk': 1})
@@ -90,6 +95,7 @@ class ProductTestCase(TestCase):
         self.assertEqual(before - 1, after)
 
     def test_api_update_inventory(self):
+        self.client.force_login(self.nothing_user, backend=None)
         client = APIClient()
         s = Supplier.objects.get(pk=1)
         before = Product.objects.all().count()

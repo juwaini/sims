@@ -1,6 +1,6 @@
 from django.http import Http404
-from django.urls import reverse
-from django.views.generic import ListView, TemplateView, CreateView, DetailView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, TemplateView, CreateView, DetailView, UpdateView, DeleteView
 from rest_framework.generics import RetrieveAPIView, CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -38,9 +38,23 @@ class ProductCreateView(CreateView):
     success_url = '/inventory/'  # reverse('list-products')
 
 
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'product-update.html'
+
+    def get_success_url(self):
+        return reverse('detail-product', kwargs={'pk': self.kwargs['pk']})
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('list-products')
+
+
 class ProductAPIListView(APIView):
     authentication_classes = [authentication.SessionAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoObjectPermissions]
 
     def get(self, request, format=None):
         products = Product.objects.all()
@@ -57,6 +71,9 @@ class ProductAPIListView(APIView):
 
 
 class ProductAPIDetailView(APIView):
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.DjangoObjectPermissions]
+
     # queryset = Product.objects.all()
     # serializer_class = ProductSerializer
     # lookup_field = 'pk'

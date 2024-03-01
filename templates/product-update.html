@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1>Add Product</h1>
+    <h1>Update Product {{ object.pk }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Submit</button>
+        <button type="submit">Update</button>
     </form>
 {% endblock body %}

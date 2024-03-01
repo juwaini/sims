@@ -29,11 +29,11 @@ class Command(BaseCommand):
             )
 
         suppliers = Supplier.objects.all()
-        for _ in range(10_000):
+        for _ in range(1_000):
             p = Product.objects.create(
                 name=fake.catch_phrase(),
                 description=fake.bs(),
-                price=Decimal(random.randrange(10, 1000)),
+                price=float(Decimal(random.randrange(1_000, 100_000))/100),
                 quantity=1000,
                 supplier=suppliers[randint(0, len(suppliers) - 1)]
             )
