@@ -2,6 +2,7 @@ import random
 from decimal import Decimal
 
 from django.contrib.auth.models import User, Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 from faker import Faker
@@ -16,11 +17,13 @@ fake = Faker()
 
 class ProductTestCase(TestCase):
     def setUp(self):
+        # Create user without any permission
         self.nothing_user = User.objects.create_user(username='nothing', email=fake.email(), password=fake.password())
 
+        # Create user with Guest permission
         self.guest_group = Group.objects.create(name='Guest')
-        # self.guest_group.permissions.add()
-        # permissions = Permission.objects.all()
+        view_product_permission = Permission.objects.get(codename='view_product')
+        self.guest_group.permissions.add(view_product_permission)
         self.guest_user = User.objects.create_user(username='guest', email=fake.email(), password=fake.password())
         self.guest_user.groups.add(self.guest_group)
 
@@ -39,18 +42,27 @@ class ProductTestCase(TestCase):
             supplier=s
         )
 
-    def test_api_list_inventory(self):
+    def test_api_list_inventory_for_user_with_no_permission(self):
         self.client.force_login(self.nothing_user, backend=None)
         url = reverse('api-list-products')
-        products_total = Product.objects.all().count()
         response = self.client.get(url)
-        # print(response.data)
-        self.assertEqual(products_total, len(response.data))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_api_list_inventory_for_guest_user(self):
+        self.client.force_login(self.guest_user, backend=None)
+        url = reverse('api-list-products')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_api_details_inventory_for_guest_user(self):
+        self.client.force_login(self.guest_user, backend=None)
+        url = reverse('api-detail-product', kwargs={'pk': 1})
+        response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_api_create_inventory(self):
-        self.client.force_login(self.nothing_user, backend=None)
+    def test_api_create_inventory_for_guest_user(self):
+        self.client.force_login(self.guest_user, backend=None)
         s = Supplier.objects.create(
             name=fake.company(),
             contact_person=fake.name(),
@@ -69,33 +81,21 @@ class ProductTestCase(TestCase):
         }
 
         response = self.client.post(url, data=product, format='')
-        print(response.data)
-        after = Product.objects.all().count()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.assertEqual(before + 1, after)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_api_details_inventory(self):
-        self.client.force_login(self.nothing_user, backend=None)
-        url = reverse('api-detail-product', kwargs={'pk': 1})
-        response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
+    #
     def test_api_delete_inventory(self):
-        self.client.force_login(self.nothing_user, backend=None)
-        before = Product.objects.all().count()
+        self.client.force_login(self.guest_user, backend=None)
 
         url = reverse('api-delete-product', kwargs={'pk': 1})
         response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        after = Product.objects.all().count()
-        self.assertEqual(before - 1, after)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_api_update_inventory(self):
-        self.client.force_login(self.nothing_user, backend=None)
+        self.client.force_login(self.guest_user, backend=None)
         client = APIClient()
         s = Supplier.objects.get(pk=1)
         before = Product.objects.all().count()
@@ -110,10 +110,8 @@ class ProductTestCase(TestCase):
         url = reverse('api-update-product', kwargs={'pk': 1})
         response = client.put(url, data=product)
         # print(response)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         after = Product.objects.all().count()
 
         self.assertEqual(before, after)
         name_after = Product.objects.get(pk=1).name
-        self.assertNotEqual(name_before, name_after)
-        self.assertEqual('Product Juwaini', name_after)

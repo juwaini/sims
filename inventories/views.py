@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import Http404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, TemplateView, CreateView, DetailView, UpdateView, DeleteView
@@ -11,7 +13,12 @@ from inventories.models import Product
 from inventories.serializers import ProductSerializer
 
 
-class ProductListView(TemplateView):
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'index.html'
+
+
+class ProductListView(PermissionRequiredMixin, TemplateView):
+    permission_required = ['inventories.view_product', ]
     template_name = 'product-list.html'
 
     def get_context_data(self, **kwargs):
@@ -21,7 +28,8 @@ class ProductListView(TemplateView):
         return context
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = ['inventories.view_product', ]
     template_name = 'product-detail.html'
     model = Product
 
@@ -31,14 +39,16 @@ class ProductDetailView(DetailView):
         return queryset
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = ['inventories.add_product', ]
     model = Product
     form_class = ProductForm
     template_name = 'product-create.html'
     success_url = '/inventory/'  # reverse('list-products')
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = ['inventories.update_product', ]
     model = Product
     form_class = ProductForm
     template_name = 'product-update.html'
@@ -47,21 +57,25 @@ class ProductUpdateView(UpdateView):
         return reverse('detail-product', kwargs={'pk': self.kwargs['pk']})
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = ['inventories.delete_product', ]
     model = Product
     success_url = reverse_lazy('list-products')
 
 
 class ProductAPIListView(APIView):
     authentication_classes = [authentication.SessionAuthentication]
-    permission_classes = [permissions.DjangoObjectPermissions]
 
     def get(self, request, format=None):
+        if not request.user.has_perm('inventories.view_product'):
+            return Response(status=status.HTTP_403_FORBIDDEN)
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
+        if not request.user.has_perm('inventories.add_product'):
+            return Response(status=status.HTTP_403_FORBIDDEN)
         serializer = ProductSerializer(data=request.data)
         # print(serializer)
         if serializer.is_valid():
@@ -72,11 +86,6 @@ class ProductAPIListView(APIView):
 
 class ProductAPIDetailView(APIView):
     authentication_classes = [authentication.SessionAuthentication]
-    permission_classes = [permissions.DjangoObjectPermissions]
-
-    # queryset = Product.objects.all()
-    # serializer_class = ProductSerializer
-    # lookup_field = 'pk'
 
     def get_object(self, pk):
         try:
@@ -85,11 +94,15 @@ class ProductAPIDetailView(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
+        if not request.user.has_perm('inventories.view_product'):
+            return Response(status=status.HTTP_403_FORBIDDEN)
         product = self.get_object(pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
+        if not request.user.has_perm('inventories.update_product'):
+            return Response(status=status.HTTP_403_FORBIDDEN)
         product = self.get_object(pk)
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
@@ -98,6 +111,8 @@ class ProductAPIDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
+        if not request.user.has_perm('inventories.delete_product'):
+            return Response(status=status.HTTP_403_FORBIDDEN)
         product = self.get_object(pk)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

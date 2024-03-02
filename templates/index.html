@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h4>Hello, {{ user.get_username }}.</h4>
+    <div class="container-fluid">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">VIEW</th>
+                <th scope="col">CREATE</th>
+                <th scope="col">UPDATE</th>
+                <th scope="col">DELETE</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">Product</th>
+                <td>{% if perms.inventories.view_product %}<a href="{% url 'list-products' %}">&#x2713;</a>{% else %}&#x2717;{% endif %}</td>
+                <td>{% if perms.inventories.create_product %}&#x2713;{% else %}&#x2717;{% endif %}</td>
+                <td>{% if perms.inventories.update_product %}&#x2713;{% else %}&#x2717;{% endif %}</td>
+                <td>{% if perms.inventories.delete_product %}&#x2713;{% else %}&#x2717;{% endif %}</td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Content here -->
+    </div>
+{% endblock %}
