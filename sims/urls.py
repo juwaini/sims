@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from inventories.views import (ProductAPIListView, ProductAPIDetailView, ProductListView, ProductCreateView,
+from inventories.api_views import ProductViewSet, SupplierViewSet
+from inventories.views import (ProductAPIView, ProductListView, ProductCreateView,
                                ProductDetailView, ProductUpdateView, ProductDeleteView, IndexView)
 
 urlpatterns = [
@@ -25,17 +26,22 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
 
+    # Product (Web)
     path('inventory/', ProductListView.as_view(), name='list-products'),
     path('create-inventory/', ProductCreateView.as_view(), name='create-product'),
     path('inventory/<int:pk>/', ProductDetailView.as_view(), name='detail-product'),
     path('update-inventory/<int:pk>', ProductUpdateView.as_view(), name='update-product'),
     path('delete-inventory/<int:pk>', ProductDeleteView.as_view(), name='delete-product'),
 
-    path('api/inventory', ProductAPIListView.as_view(), name='api-list-products'),
-    path('api/add-inventory/', ProductAPIListView.as_view(), name='api-create-product'),
-    path('api/inventory/<int:pk>', ProductAPIDetailView.as_view(), name='api-detail-product'),
-    path('api/delete-inventory/<int:pk>', ProductAPIDetailView.as_view(), name='api-delete-product'),
-    path('api/update-inventory/<int:pk>', ProductAPIDetailView.as_view(), name='api-update-product'),
+    # Product (API)
+    path('api/inventory/', ProductViewSet.as_view({'get': 'list'}), name='api-list-products'),
+    path('api/inventory/<int:pk>', ProductViewSet.as_view({'get': 'retrieve'}), name='api-detail-product'),
+    path('api/add-inventory/', ProductAPIView.as_view(), name='api-create-product'),
+    path('api/delete-inventory/<int:pk>', ProductAPIView.as_view(), name='api-delete-product'),
+    path('api/update-inventory/<int:pk>', ProductAPIView.as_view(), name='api-update-product'),
+
+    # Supplier (API)
+    path('api/supplier', SupplierViewSet.as_view({'get': 'list'}), name='api-supplier-list'),
 
     path("__debug__/", include("debug_toolbar.urls")),
 ]
