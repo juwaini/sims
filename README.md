@@ -1,17 +1,20 @@
-Simple Inventory Management System (SIMS)
+# Simple Inventory Management System (SIMS)
 
 Tech Stacks: Django, SQLite
 
 URL: https://sims.juwaini.com/
 
 Credentials:
+------------
+
 For 'Guest' user: guest:abcdwxyz
+
 For 'Admin' user: juwaini:abcdwxyz
 
 1. Endpoint `/api/inventory`
 2. Endpoint `/api/inventory/<int:pk>`
 3. Endpoints `/api/add-inventory`, `/api/delete-inventory`, `/api/update-inventory`
-4. Can be run by using command: `./manage.py populate_data`, bonus: automatically created user 'guest' and 'juwaini' with 'Guest' and 'Admin' role respectively.
+4. Can be run by using command: `./manage.py populate_data`, thanks to Faker library. Bonus: automatically created user 'guest' and 'juwaini' with 'Guest' and 'Admin' role respectively.
 5. Endpoint `/inventory`: using datatables, so mechanism to filter, sort and paginate are automatically done. One button to add product, except if you're a 'Guest'.
 6. Endpoint `inventory/<int:pk` with show details of product with pk. Button to update and delete. Minus: no static image of the product
 
