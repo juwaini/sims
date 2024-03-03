@@ -42,12 +42,18 @@ class Command(BaseCommand):
     help = 'Populates Supplier and Product tables with sample data'
 
     def handle(self, *args, **options):
-        self.guest_group = Group.objects.create(name='Guest')
+        guest_group = Group.objects.create(name='Guest')
         view_product_permission = Permission.objects.get(codename='view_product')
-        self.guest_group.permissions.add(view_product_permission)
-        self.guest_user = User.objects.create_user(username='guest', email=fake.email(), password='abcdwxyz')
-        self.guest_user.groups.add(self.guest_group)
+        guest_group.permissions.add(view_product_permission)
+        guest_user = User.objects.create_user(username='guest', email=fake.email(), password='abcdwxyz')
+        guest_user.groups.add(guest_group)
 
-        User.objects.create_superuser(username='juwaini', email=fake.email(), password='abcdwxyz')
+        superuser = User.objects.create_superuser(username='juwaini', email=fake.email(), password='abcdwxyz')
+        admin_group = Group.objects.create(name='Admin')
+        admin_permission = [Permission.objects.get(codename=n) for n in
+                            ('add_product', 'view_product', 'change_product', 'delete_product')]
+        for a in admin_permission:
+            admin_group.permissions.add(a)
+        superuser.groups.add(admin_group)
 
         generate_inventories()

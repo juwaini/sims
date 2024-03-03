@@ -29,7 +29,7 @@ class ProductViewSet(ModelViewSet):
         # queryset = Product.objects.all()
         pagination_result = self.paginate_queryset(self.queryset)
         serializer = ProductSerializer(pagination_result, many=True)
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
     def retrieve(self, request, *arg, **kwargs):
         if not request.user.has_perm('inventories.view_product'):

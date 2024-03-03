@@ -25,6 +25,7 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
+    # path('accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login'}),
 
     # Product (Web)
     path('inventory/', ProductListView.as_view(), name='list-products'),

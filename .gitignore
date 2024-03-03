@@ -4,3 +4,4 @@ venv
 .dockerignore
 Dockerfile
 fly.toml
+db.sqlite3
