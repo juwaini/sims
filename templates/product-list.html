@@ -2,15 +2,19 @@
 
 {% block body %}
     <div class="container">
-        <h1>Product List</h1>
+        <div class="container-fluid"><h1>Product List</h1></div>
+
         {% if perms.inventories.add_product %}
-            <a href="{% url 'create-product' %}">
-                <button>Add Product</button>
-            </a>
+            <div class="container-fluid">
+                {#            <a href="{% url 'create-product' %}">#}
+                {#                <button class="btn-primary" type="button">Add Product</button>#}
+                {#            </a>#}
+                <a class="btn btn-primary" href="{% url 'create-product' %}" role="button">Add Product</a>
+            </div><br>
         {% endif %}
         <!--button id="addProductBtn">ADD PRODUCT</button-->
         <div class="container-fluid">
-            <table id="productTable" class="display">
+            <table id="productTable" class="display table">
                 <thead>
                 <tr>
                     <th>ID</th>

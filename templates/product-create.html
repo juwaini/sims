@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1>Add Product</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+    <div class="container"><h1>Add Product</h1></div>
+    <div class="nav-divider"></div>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary" type="button submit">Submit</button>
+            <a class="btn btn-danger" href="{% url 'list-products' %}" role="button">Cancel</a>
+        </form>
+    </div>
 {% endblock body %}

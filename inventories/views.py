@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import Http404
 from django.urls import reverse, reverse_lazy
@@ -109,3 +110,7 @@ class ProductAPIView(APIView):
 
 class ProductAPICreateView(CreateAPIView):
     pass
+
+
+def logout_view(request):
+    logout(request)

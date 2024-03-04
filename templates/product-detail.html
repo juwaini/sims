@@ -1,33 +1,36 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1>Product Detail</h1>
-    <a href="{% url 'list-products' %}">
-        <button>Back</button>
-    </a>
-    <ul>
-        <li><strong>Name:</strong> {{ object.name }}</li>
-        <li><strong>Description:</strong> {{ object.description }}</li>
-        <li><strong>Price:</strong> {{ object.price }}</li>
-        <li><strong>Quantity:</strong> {{ object.quantity }}</li>
-        <hr>
-        <h4>SUPPLIER</h4>
-        <li><strong>Name:</strong> {{ object.supplier.name }}</li>
-        <li><strong>Contact Person:</strong> {{ object.supplier.contact_person }}</li>
-        <li><strong>Email:</strong> {{ object.supplier.email }}</li>
-        <li><strong>Phone Number:</strong> {{ object.supplier.phone_number }}</li>
-        <li><strong>Address:</strong> {{ object.supplier.address }}</li>
-    </ul>
-    {% if perms.inventories.update_product %}
-        <a href="{% url 'update-product' pk=object.pk %}">
-            <button>Update</button>
+    <div class="container-fluid"><h1>Product Detail</h1></div>
+    <div class="container-fluid">
+        <a href="{% url 'list-products' %}">
+            <button type="button" class="btn btn-secondary">Back</button>
         </a>
-    {% endif %}
+    </div><br>
+    <div class="container-fluid">
+        <ul>
+            <li><strong>Name:</strong> {{ object.name }}</li>
+            <li><strong>Description:</strong> {{ object.description }}</li>
+            <li><strong>Price:</strong> {{ object.price }}</li>
+            <li><strong>Quantity:</strong> {{ object.quantity }}</li>
+            <hr>
+            <h4>SUPPLIER</h4>
+            <li><strong>Name:</strong> {{ object.supplier.name }}</li>
+            <li><strong>Contact Person:</strong> {{ object.supplier.contact_person }}</li>
+            <li><strong>Email:</strong> {{ object.supplier.email }}</li>
+            <li><strong>Phone Number:</strong> {{ object.supplier.phone_number }}</li>
+            <li><strong>Address:</strong> {{ object.supplier.address }}</li>
+        </ul>
+        {% if perms.inventories.update_product %}
+            <a href="{% url 'update-product' pk=object.pk %}">
+                <button class="btn btn-primary">Update</button>
+            </a>
+        {% endif %}
 
-    {% if perms.inventories.delete_product %}
-        <a href="{% url 'delete-product' pk=object.pk %}">
-            <button>Delete</button>
-        </a>
-    {% endif %}
-
+        {% if perms.inventories.delete_product %}
+            <a href="{% url 'delete-product' pk=object.pk %}">
+                <button class="btn btn-danger">Delete</button>
+            </a>
+        {% endif %}
+    </div>
 {% endblock body %}

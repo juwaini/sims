@@ -134,7 +134,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
@@ -146,3 +145,4 @@ INTERNAL_IPS = [
 STATIC_ROOT = '/var/www/html/static/'
 
 LOGIN_REDIRECT_URL = '/inventory'
+LOGOUT_REDIRECT_URL = "/"

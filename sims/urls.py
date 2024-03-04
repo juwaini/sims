@@ -19,12 +19,14 @@ from django.urls import path, include
 
 from inventories.api_views import ProductViewSet, SupplierViewSet
 from inventories.views import (ProductAPIView, ProductListView, ProductCreateView,
-                               ProductDetailView, ProductUpdateView, ProductDeleteView, IndexView)
+                               ProductDetailView, ProductUpdateView, ProductDeleteView, IndexView, logout_view)
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
+    path('accounts/logout/', logout_view, name='logout'),
+
     # path('accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login'}),
 
     # Product (Web)

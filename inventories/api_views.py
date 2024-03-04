@@ -16,7 +16,7 @@ class SupplierViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         pag = self.paginate_queryset(self.queryset)
         serializer = SupplierSerializer(pag, many=True)
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
 
 class ProductViewSet(ModelViewSet):

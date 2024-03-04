@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1>Update Product {{ object.pk }}</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Update</button>
-    </form>
+    <div class="container-fluid">
+        <h1>Update Product {{ object.pk }}</h1>
+    </div>
+    <div class="container-fluid">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-secondary" type="button submit">Update</button>
+            <a class="btn btn-danger" href="{% url 'detail-product' pk=object.pk %}" role="button">Cancel</a>
+        </form>
+    </div>
+
 {% endblock body %}

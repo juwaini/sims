@@ -6,6 +6,7 @@
             <p>Are you sure you want to delete "{{ object }}"?</p>
             {{ form }}
             <input type="submit" value="Confirm">
+            <a class="btn btn-danger" href="{% url 'detail-product' pk=object.pk %}" role="button">Cancel</a>
         </form>
     </div>
 {% endblock %}
