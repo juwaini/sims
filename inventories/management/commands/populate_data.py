@@ -1,13 +1,14 @@
 import random
 from decimal import Decimal
+from pathlib import Path
 from random import randint
 
 from django.contrib.auth.models import User, Group, Permission
+from django.core import management
 from django.core.management.base import BaseCommand
+from faker import Faker
 
 from inventories.models import Supplier, Product, ProductImage
-
-from faker import Faker
 
 fake = Faker()
 
@@ -49,6 +50,12 @@ class Command(BaseCommand):
     help = 'Populates Supplier and Product tables with sample data'
 
     def handle(self, *args, **options):
+        BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+        db_path = Path.joinpath(BASE_DIR, 'db.sqlite3')
+        # print(db_path)
+        Path.unlink(db_path)  # delete db.sqlite3
+        management.call_command('migrate')
+
         guest_group = Group.objects.create(name='Guest')
         view_product_permission = Permission.objects.get(codename='view_product')
         guest_group.permissions.add(view_product_permission)
