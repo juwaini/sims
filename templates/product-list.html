@@ -6,10 +6,9 @@
 
         {% if perms.inventories.add_product %}
             <div class="container-fluid">
-                {#            <a href="{% url 'create-product' %}">#}
-                {#                <button class="btn-primary" type="button">Add Product</button>#}
-                {#            </a>#}
                 <a class="btn btn-primary" href="{% url 'create-product' %}" role="button">Add Product</a>
+                <a class="btn btn-secondary" href="{% url 'index' %}" role="button">Back</a>
+
             </div><br>
         {% endif %}
         <!--button id="addProductBtn">ADD PRODUCT</button-->
