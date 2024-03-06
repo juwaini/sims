@@ -13,7 +13,7 @@ fake = Faker()
 
 
 def generate_inventories(n=1000):
-    for i in range(n//10):
+    for i in range(n // 10):
         Supplier.objects.create(
             name=fake.company(),
             contact_person=fake.name(),
@@ -23,13 +23,20 @@ def generate_inventories(n=1000):
         )
 
     suppliers = Supplier.objects.all()
+
+    def get_supplier(s=suppliers):
+        if s.count() == 1:
+            return s[0]
+        else:
+            return s[randint(0, s.count() - 1)]
+
     for _ in range(n):
         p = Product.objects.create(
             name=fake.catch_phrase(),
             description=fake.bs(),
             price=float(Decimal(random.randrange(1_000, 100_000)) / 100),
             quantity=1000,
-            supplier=suppliers[randint(0, len(suppliers) - 1)]
+            supplier=get_supplier()
         )
 
         ProductImage.objects.create(

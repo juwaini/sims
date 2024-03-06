@@ -49,7 +49,7 @@ class ProductTestCase(TestCase):
         url = reverse('api-list-products')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        print(response.json())
+        # print(response.json())
         # self.assertEqual(type(response.data), json)
 
     def test_api_details_inventory_for_guest_user(self):
@@ -115,7 +115,7 @@ class ProductTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_api_update_inventory(self):
-        generate_inventories(5)
+        generate_inventories(10)
 
         self.client.force_login(self.guest_user, backend=None)
         client = APIClient()
