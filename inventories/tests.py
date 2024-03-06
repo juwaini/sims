@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.urls import reverse
 from faker import Faker
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
 from .management.commands.populate_data import fake, generate_inventories
@@ -31,7 +32,8 @@ class ProductTestCase(TestCase):
         self.superuser = User.objects.create_superuser(username='superuser', email=fake.email(),
                                                        password=fake.password())
         self.admin_group = Group.objects.create(name='Admin')
-        admin_permission = [Permission.objects.get(codename=n) for n in ('add_product', 'view_product', 'change_product', 'delete_product')]
+        admin_permission = [Permission.objects.get(codename=n) for n in
+                            ('add_product', 'view_product', 'change_product', 'delete_product')]
         for a in admin_permission:
             self.admin_group.permissions.add(a)
         self.superuser.groups.add(self.admin_group)
@@ -41,6 +43,16 @@ class ProductTestCase(TestCase):
         url = reverse('api-list-products')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # If this one works, every other test can use simpler session auth
+    def test_api_list_inventory_for_guest_user_using_token(self):
+        client = APIClient()
+        token, created = Token.objects.get_or_create(user=self.superuser)
+        assert created
+        url = reverse('api-list-products')
+        headers = {'Authorization': f'Token {token}'}
+        response = client.get(url, headers=headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_api_list_inventory_for_guest_user(self):
         generate_inventories(100)

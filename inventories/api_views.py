@@ -10,7 +10,7 @@ from inventories.serializers import ProductSerializer, SupplierSerializer
 
 
 class SupplierViewSet(ModelViewSet):
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
     queryset = Supplier.objects.all().order_by('id')
 
     def list(self, request, *args, **kwargs):
@@ -20,7 +20,10 @@ class SupplierViewSet(ModelViewSet):
 
 
 class ProductViewSet(ModelViewSet):
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = (
+        authentication.TokenAuthentication,
+        authentication.SessionAuthentication
+    )
     queryset = Product.objects.all().order_by('id')
 
     def list(self, request, *args, **kwargs):
