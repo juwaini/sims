@@ -38,6 +38,9 @@ class ProductTestCase(TestCase):
             self.admin_group.permissions.add(a)
         self.superuser.groups.add(self.admin_group)
 
+    def test_token_created(self):
+        self.assertEqual(Token.objects.all().count(), 3)
+
     def test_api_list_inventory_for_user_with_no_permission(self):
         self.client.force_login(self.nothing_user, backend=None)
         url = reverse('api-list-products')
@@ -47,8 +50,7 @@ class ProductTestCase(TestCase):
     # If this one works, every other test can use simpler session auth
     def test_api_list_inventory_for_guest_user_using_token(self):
         client = APIClient()
-        token, created = Token.objects.get_or_create(user=self.superuser)
-        assert created
+        token = Token.objects.get(user=self.superuser)
         url = reverse('api-list-products')
         headers = {'Authorization': f'Token {token}'}
         response = client.get(url, headers=headers)
