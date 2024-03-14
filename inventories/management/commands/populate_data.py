@@ -7,7 +7,6 @@ from django.contrib.auth.models import User, Group, Permission
 from django.core import management
 from django.core.management.base import BaseCommand
 from faker import Faker
-from faker_file.providers.image.imgkit_generator import ImgkitImageGenerator
 from faker_file.providers.png_file import PngFileProvider
 
 from inventories.models import Supplier, Product
