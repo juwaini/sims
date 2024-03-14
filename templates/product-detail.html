@@ -13,6 +13,10 @@
             <li><strong>Description:</strong> {{ object.description }}</li>
             <li><strong>Price:</strong> {{ object.price }}</li>
             <li><strong>Quantity:</strong> {{ object.quantity }}</li>
+{#            {% for img in object.images.all %}#}
+{#                <div><img src="{{ img.image.url }}">#}
+{#                </div>#}
+{#            {% endfor %}#}
             <hr>
             <h4>SUPPLIER</h4>
             <li><strong>Name:</strong> {{ object.supplier.name }}</li>

@@ -30,13 +30,26 @@ class ProductTestCase(TestCase):
 
         # Create superuser that can do all
         self.superuser = User.objects.create_superuser(username='superuser', email=fake.email(),
-                                                       password=fake.password())
+                                                       password='abcdwxyz')
         self.admin_group = Group.objects.create(name='Admin')
         admin_permission = [Permission.objects.get(codename=n) for n in
                             ('add_product', 'view_product', 'change_product', 'delete_product')]
         for a in admin_permission:
             self.admin_group.permissions.add(a)
         self.superuser.groups.add(self.admin_group)
+
+    def test_api_token_auth(self):
+        client = APIClient()
+        url = reverse('api-token-auth')
+        data = {'username': 'superuser', 'password': 'abcdwxyz'}
+        r = client.post(url, data=data)
+        self.assertEqual(r.status_code, status.HTTP_200_OK)
+
+        url = reverse('api-list-products')
+        token = r.json()['token']
+        headers = {'Authorization': f'Token {token}'}
+        response = client.get(url, headers=headers)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_token_created(self):
         self.assertEqual(Token.objects.all().count(), 3)

@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken import views
 
 from inventories.api_views import ProductViewSet, SupplierViewSet
 from inventories.views import (ProductAPIView, ProductListView, ProductCreateView,
@@ -45,6 +46,7 @@ urlpatterns = [
 
     # Supplier (API)
     path('api/supplier', SupplierViewSet.as_view({'get': 'list'}), name='api-supplier-list'),
+    path('api-token-auth/', views.obtain_auth_token, name='api-token-auth'),
 
     path("__debug__/", include("debug_toolbar.urls")),
 ]

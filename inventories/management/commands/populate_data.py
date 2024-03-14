@@ -7,10 +7,13 @@ from django.contrib.auth.models import User, Group, Permission
 from django.core import management
 from django.core.management.base import BaseCommand
 from faker import Faker
+from faker_file.providers.image.imgkit_generator import ImgkitImageGenerator
+from faker_file.providers.png_file import PngFileProvider
 
-from inventories.models import Supplier, Product, ProductImage
+from inventories.models import Supplier, Product
 
 fake = Faker()
+fake.add_provider(PngFileProvider)  # Register PngFileProvider
 
 
 def generate_inventories(n=1000):
@@ -31,18 +34,16 @@ def generate_inventories(n=1000):
         else:
             return s[randint(0, s.count() - 1)]
 
+    # file = fake.png_file(image_generator_cls=ImgkitImageGenerator)
+
     for _ in range(n):
         p = Product.objects.create(
             name=fake.catch_phrase(),
             description=fake.bs(),
             price=float(Decimal(random.randrange(1_000, 100_000)) / 100),
             quantity=1000,
+            # image=file,
             supplier=get_supplier()
-        )
-
-        ProductImage.objects.create(
-            product=p,
-            # image=
         )
 
 
@@ -70,4 +71,4 @@ class Command(BaseCommand):
             admin_group.permissions.add(a)
         superuser.groups.add(admin_group)
 
-        generate_inventories()
+        generate_inventories(10)
