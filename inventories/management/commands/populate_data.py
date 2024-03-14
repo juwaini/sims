@@ -68,4 +68,4 @@ class Command(BaseCommand):
             admin_group.permissions.add(a)
         superuser.groups.add(admin_group)
 
-        generate_inventories(10)
+        generate_inventories()
