@@ -29,7 +29,7 @@ class Product(models.Model):
     price = models.DecimalField(validators=[
         MinValueValidator(0.01)
     ], max_digits=10, decimal_places=2)
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField()
     # image = models.ImageField(upload_to='product_images/', null=True, blank=True)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 

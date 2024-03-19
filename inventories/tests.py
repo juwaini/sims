@@ -188,3 +188,26 @@ class ProductTestCase(TestCase):
         self.assertEqual(response.json()['price'], ['Ensure this value is greater than or equal to 0.01.'])
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(before, Product.objects.all().count())
+
+    def test_api_create_inventory_for_admin_user_with_negative_quantity(self):
+        self.client.force_login(self.superuser, backend=None)
+        s = Supplier.objects.create(
+            name=fake.company(),
+            contact_person=fake.name(),
+            email=fake.email(),
+            phone_number=fake.phone_number(),
+            address=fake.address()
+        )
+        url = reverse('api-create-product')
+        before = Product.objects.all().count()
+        product = {
+            'name': fake.bs(),
+            'description': fake.catch_phrase(),
+            'price': 100.00,
+            'quantity': -5_000,
+            'supplier': s.pk
+        }
+        response = self.client.post(url, data=product)
+        self.assertEqual(response.json()['quantity'], ['Ensure this value is greater than or equal to 0.'])
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(before, Product.objects.all().count())
